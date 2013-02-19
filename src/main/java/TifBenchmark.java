@@ -61,10 +61,14 @@ public class TifBenchmark
 		{
 			destination.transferFrom( source, 0, source.size() );
 		}
-		source.close();
-		sourceStream.close();
-		destination.close();
-		destStream.close();
+		if ( source != null ) {
+			source.close();
+			sourceStream.close();
+		}
+		if ( destination != null ) {
+			destination.close();
+			destStream.close();
+		}
 	}
 
 	public static void main( final String[] args ) throws IOException
