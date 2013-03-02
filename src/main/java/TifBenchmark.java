@@ -10,6 +10,7 @@ import java.nio.channels.FileChannel;
 import net.imglib2.img.Img;
 import net.imglib2.img.array.ArrayImgFactory;
 import net.imglib2.img.display.imagej.ImageJFunctions;
+import net.imglib2.img.planar.PlanarImgFactory;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.io.ImgOpener;
 import net.imglib2.type.numeric.real.FloatType;
@@ -22,6 +23,23 @@ public class TifBenchmark
 	{
 		final int numSlices = sliceFilenames.length;
 		final ArrayImgFactory< FloatType > factory = new ArrayImgFactory< FloatType >();
+		final FloatType type = new FloatType();
+		final ImgOpener o = new ImgOpener();
+		o.setGroupFiles(true);
+
+		Img< FloatType > slice = null;
+		for ( int z = 0; z < numSlices; ++z )
+		{
+			slice = o.openImg( sliceFilenames[ z ], factory, type );
+		}
+
+		return slice;
+	}
+
+	public static Img< FloatType > loadSlicesImgOpenerPlanar( final String[] sliceFilenames ) throws ImgIOException
+	{
+		final int numSlices = sliceFilenames.length;
+		final PlanarImgFactory<FloatType> factory = new PlanarImgFactory< FloatType >();
 		final FloatType type = new FloatType();
 		final ImgOpener o = new ImgOpener();
 		o.setGroupFiles(true);
@@ -113,6 +131,25 @@ public class TifBenchmark
 		} );
 		// report
 		if (profile) PerformanceProfiler.report(new File("/tmp", "ij.log.out"), 3);
+
+		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar), " + numDummyFiles + " other tif files in same directory" );
+		if (profile) PerformanceProfiler.setActive(true);
+		BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					loadSlicesImgOpenerPlanar( sliceFilenames );
+				}
+				catch ( final ImgIOException e )
+				{
+					e.printStackTrace();
+				}
+			}
+		} );
+		if (profile) PerformanceProfiler.report(new File("/tmp", "img-planar.log.out"), 3);
 
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener, " + numDummyFiles + " other tif files in same directory" );
 		if (profile) PerformanceProfiler.setActive(true);
