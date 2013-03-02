@@ -1,3 +1,4 @@
+import fiji.PerformanceProfiler;
 import ij.ImagePlus;
 
 import java.io.File;
@@ -71,8 +72,13 @@ public class TifBenchmark
 		}
 	}
 
-	public static void main( final String[] args ) throws IOException
+	public static boolean profile = true;
+
+	public static void main( final String... args ) throws Throwable
 	{
+		// start the profiler (relaunches the class in an instrumenting class loader)
+		if (profile && PerformanceProfiler.startProfiling(null, args)) return;
+
 		final int numRuns = 3; // how many times the benchmark is run
 		final int numSlices = 1; // how many slices to load per benchmark
 		final int numDummyFiles = 100; // how many empty .tif files to create in the same directory as the image file
@@ -92,7 +98,11 @@ public class TifBenchmark
 		for ( int i = 0; i < sliceFilenames.length; ++i )
 			sliceFilenames[ i ] = filename;
 
+		// reset profiling counters
+		if (profile) PerformanceProfiler.report(null);
 		System.out.println( "loading " + numSlices + " tif images using ImageJ, " + numDummyFiles + " other tif files in same directory" );
+		// restart profiling
+		if (profile) PerformanceProfiler.setActive(true);
 		BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
 		{
 			@Override
@@ -101,8 +111,11 @@ public class TifBenchmark
 				loadSlicesImageJ( sliceFilenames );
 			}
 		} );
+		// report
+		if (profile) PerformanceProfiler.report(new File("/tmp", "ij.log.out"), 3);
 
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener, " + numDummyFiles + " other tif files in same directory" );
+		if (profile) PerformanceProfiler.setActive(true);
 		BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
 		{
 			@Override
@@ -118,6 +131,7 @@ public class TifBenchmark
 				}
 			}
 		} );
+		if (profile) PerformanceProfiler.report(new File("/tmp", "img-array.log.out"), 3);
 
 		for ( int i = 0; i < numDummyFiles; ++i )
 		{
