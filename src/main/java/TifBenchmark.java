@@ -133,23 +133,26 @@ public class TifBenchmark
 		for ( int i = 0; i < sliceFilenames.length; ++i )
 			sliceFilenames[ i ] = filename;
 
+		boolean runIJ1 = false;
 		boolean skipTooSlow = true;
 
 		// reset profiling counters
 		if (profile) PerformanceProfiler.report(null);
-		System.out.println( "loading " + numSlices + " tif images using ImageJ, " + numDummyFiles + " other tif files in same directory" );
-		// restart profiling
-		if (profile) PerformanceProfiler.setActive(true);
-		BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
-		{
-			@Override
-			public void run()
+		if (runIJ1) {
+			System.out.println( "loading " + numSlices + " tif images using ImageJ, " + numDummyFiles + " other tif files in same directory" );
+			// restart profiling
+			if (profile) PerformanceProfiler.setActive(true);
+			BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
 			{
-				loadSlicesImageJ( sliceFilenames );
-			}
-		} );
-		// report
-		if (profile) PerformanceProfiler.report(new File("/tmp", "ij.log.out"), 3);
+				@Override
+				public void run()
+				{
+					loadSlicesImageJ( sliceFilenames );
+				}
+			} );
+			// report
+			if (profile) PerformanceProfiler.report(new File("/tmp", "ij.log.out"), 3);
+		}
 
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar, disallow file grouping), " + numDummyFiles + " other tif files in same directory" );
 		if (profile) PerformanceProfiler.setActive(true);
