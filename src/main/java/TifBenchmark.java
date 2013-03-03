@@ -107,7 +107,7 @@ public class TifBenchmark
 		}
 	}
 
-	public static boolean profile = !true;
+	public static boolean profile = true;
 
 	public static void main( final String... args ) throws Throwable
 	{
@@ -167,6 +167,8 @@ public class TifBenchmark
 			}
 		} );
 		if (profile) PerformanceProfiler.report(new File("/tmp", "img-ungrouped-planar.log.out"), 3);
+
+		if (true) return; // the remaining cases are slower, only kept for reference.
 
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar), " + numDummyFiles + " other tif files in same directory" );
 		if (profile) PerformanceProfiler.setActive(true);
