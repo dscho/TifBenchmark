@@ -114,9 +114,9 @@ public class TifBenchmark
 		// start the profiler (relaunches the class in an instrumenting class loader)
 		if (profile && PerformanceProfiler.startProfiling(null, args)) return;
 
-		final int numRuns = 3; // how many times the benchmark is run
-		final int numSlices = 1; // how many slices to load per benchmark
-		final int numDummyFiles = 100; // how many empty .tif files to create in the same directory as the image file
+		final int numRuns = 5; // how many times the benchmark is run
+		final int numSlices = 50; // how many slices to load per benchmark
+		final int numDummyFiles = 10000; // how many empty .tif files to create in the same directory as the image file
 
 		final File tmpDir = File.createTempFile( "images", null );
 		tmpDir.delete();
