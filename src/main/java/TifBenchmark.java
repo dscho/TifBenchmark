@@ -107,7 +107,7 @@ public class TifBenchmark
 		}
 	}
 
-	public static boolean profile = true;
+	public static boolean profile = !true;
 
 	public static void main( final String... args ) throws Throwable
 	{
