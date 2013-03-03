@@ -154,6 +154,11 @@ public class TifBenchmark
 			if (profile) PerformanceProfiler.report(new File("/tmp", "ij.log.out"), 3);
 		}
 
+		/*
+		 * Ask SCIFIO nicely to stop copying stuff around and to use mapped
+		 * files, thankyouverymuch.
+		 */
+		System.setProperty("mappedBuffers", "true");
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar, disallow file grouping), " + numDummyFiles + " other tif files in same directory" );
 		if (profile) PerformanceProfiler.setActive(true);
 		BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
