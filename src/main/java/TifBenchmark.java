@@ -53,6 +53,23 @@ public class TifBenchmark
 		return slice;
 	}
 
+	public static Img< FloatType > loadSlicesImgOpenerPlanarNoGroupedFiles( final String[] sliceFilenames ) throws ImgIOException
+	{
+		final int numSlices = sliceFilenames.length;
+		final PlanarImgFactory<FloatType> factory = new PlanarImgFactory< FloatType >();
+		final FloatType type = new FloatType();
+		final ImgOpener o = new ImgOpener();
+		o.setGroupFiles(false);
+
+		Img< FloatType > slice = null;
+		for ( int z = 0; z < numSlices; ++z )
+		{
+			slice = o.openImg( sliceFilenames[ z ], factory, type );
+		}
+
+		return slice;
+	}
+
 	public static Img< FloatType > loadSlicesImageJ( final String[] sliceFilenames )
 	{
 		final int numSlices = sliceFilenames.length;
@@ -131,6 +148,25 @@ public class TifBenchmark
 		} );
 		// report
 		if (profile) PerformanceProfiler.report(new File("/tmp", "ij.log.out"), 3);
+
+		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar, disallow file grouping), " + numDummyFiles + " other tif files in same directory" );
+		if (profile) PerformanceProfiler.setActive(true);
+		BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					loadSlicesImgOpenerPlanarNoGroupedFiles( sliceFilenames );
+				}
+				catch ( final ImgIOException e )
+				{
+					e.printStackTrace();
+				}
+			}
+		} );
+		if (profile) PerformanceProfiler.report(new File("/tmp", "img-ungrouped-planar.log.out"), 3);
 
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar), " + numDummyFiles + " other tif files in same directory" );
 		if (profile) PerformanceProfiler.setActive(true);
