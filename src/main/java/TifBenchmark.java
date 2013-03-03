@@ -133,6 +133,8 @@ public class TifBenchmark
 		for ( int i = 0; i < sliceFilenames.length; ++i )
 			sliceFilenames[ i ] = filename;
 
+		boolean skipTooSlow = true;
+
 		// reset profiling counters
 		if (profile) PerformanceProfiler.report(null);
 		System.out.println( "loading " + numSlices + " tif images using ImageJ, " + numDummyFiles + " other tif files in same directory" );
@@ -168,7 +170,7 @@ public class TifBenchmark
 		} );
 		if (profile) PerformanceProfiler.report(new File("/tmp", "img-ungrouped-planar.log.out"), 3);
 
-		if (true) return; // the remaining cases are slower, only kept for reference.
+		if (skipTooSlow) return; // the remaining cases are slower, only kept for reference.
 
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar), " + numDummyFiles + " other tif files in same directory" );
 		if (profile) PerformanceProfiler.setActive(true);
