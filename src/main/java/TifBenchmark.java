@@ -60,6 +60,7 @@ public class TifBenchmark
 		final FloatType type = new FloatType();
 		final ImgOpener o = new ImgOpener();
 		o.setGroupFiles(false);
+		o.setGetReaderSlow(false);
 
 		Img< FloatType > slice = null;
 		for ( int z = 0; z < numSlices; ++z )
