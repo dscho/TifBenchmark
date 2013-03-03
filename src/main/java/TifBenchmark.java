@@ -159,6 +159,10 @@ public class TifBenchmark
 		 * files, thankyouverymuch.
 		 */
 		System.setProperty("mappedBuffers", "true");
+
+		// let's not let instrumentation dominate the performance statistics
+		if (profile) loadSlicesImgOpenerPlanarNoGroupedFiles( sliceFilenames );
+
 		System.out.println( "loading " + numSlices + " tif images using ImgOpener (Planar, disallow file grouping), " + numDummyFiles + " other tif files in same directory" );
 		if (profile) PerformanceProfiler.setActive(true);
 		BenchmarkHelper.benchmarkAndPrint( numRuns, false, new Runnable()
