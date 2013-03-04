@@ -23,6 +23,7 @@ public class TifBenchmark
 		final ArrayImgFactory< FloatType > factory = new ArrayImgFactory< FloatType >();
 		final FloatType type = new FloatType();
 		final ImgOpener o = new ImgOpener();
+		o.setGroupFiles(true);
 
 		Img< FloatType > slice = null;
 		for ( int z = 0; z < numSlices; ++z )
